@@ -1,14 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-
 </head>
 <body>
 
 <h1>Parti Viewer Insight</h1>
+
+<p><em><strong>Note:</strong> This application is currently in <strong>Beta Testing</strong> phase. Features and functionality may change.</em></p>
 
 <p><strong>Parti Viewer Insight</strong> is a desktop application built with Python and Tkinter to monitor and analyze livestream viewer data from the <a href="https://parti.com" target="_blank" rel="noopener noreferrer">Parti</a> platform. It distinguishes between real and fake (bot) viewers based on different viewer ratios.</p>
 
