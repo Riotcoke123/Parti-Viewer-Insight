@@ -6,6 +6,8 @@
 </head>
 <body>
 
+
+<img src="https://github.com/user-attachments/assets/38b8f0ec-304c-4a9c-8e59-c5a451a9c70e">
 <h1>Parti Viewer Insight</h1>
 
 <p><em><strong>Note:</strong> This application is currently in <strong>Beta Testing</strong> phase. Features and functionality may change.</em></p>
