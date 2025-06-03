@@ -51,11 +51,6 @@
   <h2>License</h2>
   <p>This project is licensed under the <a href="https://github.com/Riotcoke123/Parti-Viewer-Insight/blob/main/LICENSE" target="_blank">GPL-3.0 License</a>.</p>
 
-  <p>For more details and to view the source code, visit the 
-    <a href="https://github.com/Riotcoke123/Parti-Viewer-Insight" target="_blank">
-      Parti-Viewer-Insight GitHub repository
-    </a>.
-  </p>
 
 
 </body>
