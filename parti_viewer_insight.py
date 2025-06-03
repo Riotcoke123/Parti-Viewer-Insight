@@ -8,7 +8,7 @@ from PIL import Image, ImageTk
 import urllib.request
 import io
 
-user_ids = ["465731"]  # Replace/add streamer IDs here
+user_ids = ["465731", "348242"]
 
 headers = {
     "User-Agent": "Mozilla/5.0",
@@ -91,14 +91,12 @@ def fetch_all_streamers(user_ids):
 def display_viewer_stats(container, analysis, viewer_img, bot_img):
     total = analysis.get("total_viewer_count", 0)
 
-    # 8:1 ratio data
     r8 = analysis["8:1_ratio"]
     real_8, bots_8 = r8["real_viewer_count"], r8["bot_viewer_count"]
     ratio_percent_8 = int((bots_8 / total) * 100) if total else 0
     status_text_8 = "⚠️ Looks Botted" if ratio_percent_8 > 80 else "✅ Clean"
     status_color_8 = "red" if ratio_percent_8 > 80 else "green"
 
-    # 12:1 ratio data
     r12 = analysis["12:1_ratio"]
     real_12, bots_12 = r12["real_viewer_count"], r12["bot_viewer_count"]
     ratio_percent_12 = int((bots_12 / total) * 100) if total else 0
@@ -108,15 +106,12 @@ def display_viewer_stats(container, analysis, viewer_img, bot_img):
     center = tk.Frame(container)
     center.pack(anchor="center")
 
-    # Total Viewers
     total_frame = tk.Frame(center)
     total_frame.pack()
     tk.Label(total_frame, image=viewer_img).pack(side="left")
     tk.Label(total_frame, text=f"{total}", font=("Arial", 10, "bold")).pack(side="left", padx=5)
 
-    # 8:1 Ratio
     tk.Label(center, text="8:1 Ratio", font=("Arial", 10, "bold")).pack(pady=(5,0))
-
     real_frame = tk.Frame(center)
     real_frame.pack()
     tk.Label(real_frame, image=viewer_img).pack(side="left")
@@ -129,9 +124,7 @@ def display_viewer_stats(container, analysis, viewer_img, bot_img):
 
     tk.Label(center, text=f"Status: {status_text_8}", fg=status_color_8, font=("Arial", 10, "bold")).pack(pady=(0, 5))
 
-    # 12:1 Ratio
     tk.Label(center, text="12:1 Ratio", font=("Arial", 10, "bold")).pack(pady=(10,0))
-
     real_frame = tk.Frame(center)
     real_frame.pack()
     tk.Label(real_frame, image=viewer_img).pack(side="left")
@@ -156,7 +149,7 @@ def run_fetch():
 
         for item in combined_data:
             container = tk.Frame(profile_frame, bd=2, relief="groove", padx=5, pady=5)
-            container.pack(padx=5, pady=10, anchor="center")
+            container.pack(side="left", padx=5, pady=10)
 
             username = item.get("social_username", "Unknown")
             avatar_url = item.get("avatar_link")
@@ -174,20 +167,17 @@ def run_fetch():
                 print(f"Image error for {username}: {e}")
 
             tk.Label(container, text=f"Username: {username}", font=("Arial", 12, "bold")).pack()
-
             display_viewer_stats(container, item["viewer_analysis"], viewer_icon, bot_icon)
 
         output_box.insert(tk.END, "Done.\n")
 
     threading.Thread(target=task).start()
-
-    # Auto refresh every 60 seconds
     root.after(60000, run_fetch)
 
 # GUI setup
 root = tk.Tk()
 root.title("Parti Stream Viewer Checker")
-root.geometry("600x550")
+root.geometry("800x650")  # Increased window height
 
 # Load icons
 def load_image(url, size):
@@ -200,7 +190,6 @@ top_banner = load_image("https://i.ibb.co/xKW6fznS/1.jpg", (175, 200))
 viewer_icon = load_image("https://i.ibb.co/5hzdhk3G/icons8-viewer-50.png", (25, 25))
 bot_icon = load_image("https://i.ibb.co/KpYp89wR/icons8-bot-100.png", (25, 25))
 
-# UI Layout
 tk.Label(root, image=top_banner).pack(pady=10)
 
 frame = tk.Frame(root)
@@ -209,8 +198,21 @@ frame.pack()
 start_button = tk.Button(frame, text="Fetch Stream Data", command=run_fetch, font=("Arial", 12))
 start_button.pack()
 
-profile_frame = tk.Frame(root)
-profile_frame.pack(pady=10, fill="both", expand=True)
+# Scrollable profile display
+canvas = tk.Canvas(root, height=400)  # Increased canvas height by 100
+scroll_x = tk.Scrollbar(root, orient="horizontal", command=canvas.xview)
+canvas.configure(xscrollcommand=scroll_x.set)
+
+scroll_x.pack(fill="x", side="bottom")
+canvas.pack(fill="both", expand=True)
+
+profile_frame = tk.Frame(canvas)
+canvas.create_window((0, 0), window=profile_frame, anchor="nw")
+
+def update_scrollregion(event):
+    canvas.configure(scrollregion=canvas.bbox("all"))
+
+profile_frame.bind("<Configure>", update_scrollregion)
 
 output_box = scrolledtext.ScrolledText(root, width=80, height=6)
 output_box.pack()
